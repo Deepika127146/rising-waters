@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prediction History | Rising Waters</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="navbar-brand-group">
+      <a href="/" class="navbar-brand">🌊 Rising Waters</a>
+      <span class="navbar-tagline">Catchment Flood Susceptibility Assessment</span>
+    </div>
+    <nav class="navbar-nav">
+      <a href="/" class="nav-link {% if active_page == 'home' %}active{% endif %}">Home</a>
+      <a href="/dashboard" class="nav-link {% if active_page == 'dashboard' %}active{% endif %}">Dashboard</a>
+      <a href="/history" class="nav-link {% if active_page == 'history' %}active{% endif %}">History</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="history-header">
+      <div>
+        <h1>Prediction History</h1>
+        <p>Complete historical log of meteorological readings, model assessments, and risk classifications.</p>
+      </div>
+      <div class="btn-action-group">
+        <a href="/" class="btn btn-primary">➕ New Prediction</a>
+        {% if predictions %}
+        <a href="/history/export" class="btn btn-secondary">📥 Export CSV</a>
+        <form action="/history/clear" method="POST" style="display: inline;" onsubmit="return confirmClear();">
+          <button type="submit" class="btn btn-danger">🗑️ Clear History</button>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if cleared %}
+    <div class="alert alert-success">
+      ✓ Prediction history has been cleared successfully.
+    </div>
+    {% endif %}
+
+    {% if predictions %}
+    <div class="card table-card">
+      <div class="table-card-header">
+        <h2>Logged Predictions ({{ predictions|length }})</h2>
+        <a href="/history/export" class="btn btn-secondary" style="font-size: 0.82rem; padding: 0.35rem 0.75rem;">Download CSV</a>
+      </div>
+      <div class="table-responsive">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Date & Time</th>
+              <th>Assessment Type</th>
+              <th>Region</th>
+              <th>Season</th>
+              <th>Seasonal (mm)</th>
+              <th>Annual (mm)</th>
+              <th>Winter (mm)</th>
+              <th>Temp (°C)</th>
+              <th>Predicted Risk / Susceptibility</th>
+              <th>Confidence</th>
+              <th>Model</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for pred in predictions %}
+            <tr>
+              <td>#{{ pred.id }}</td>
+              <td>{{ pred.timestamp }}</td>
+              <td>
+                <span class="badge {% if pred.assessment_type and 'Susceptibility' in pred.assessment_type %}badge-primary{% else %}badge-secondary{% endif %}">
+                  {{ pred.assessment_type | default('Legacy Rainfall Risk') }}
+                </span>
+              </td>
+              <td>{{ pred.region | default('—') }}</td>
+              <td>{{ pred.season | default('—') }}</td>
+              <td>
+                {% if pred.seasonal_rainfall is not none %}
+                  {{ pred.seasonal_rainfall }}
+                {% elif pred.monsoon_rainfall is not none and pred.monsoon_rainfall > 0 %}
+                  {{ pred.monsoon_rainfall }}
+                {% else %}
+                  —
+                {% endif %}
+              </td>
+              <td><strong>{{ pred.annual_rainfall }}</strong></td>
+              <td>{{ pred.winter_rainfall }}</td>
+              <td>
+                {% if pred.temperature is not none %}
+                  {{ pred.temperature }}
+                {% else %}
+                  —
+                {% endif %}
+              </td>
+              <td>
+                {% if 'High' in pred.prediction_result %}
+                  <span class="badge badge-danger">🚨 {{ pred.prediction_result }}</span>
+                {% else %}
+                  <span class="badge badge-success">✅ {{ pred.prediction_result }}</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if pred.confidence is not none %}
+                  {{ pred.confidence }}%
+                {% else %}
+                  <span style="color: var(--text-muted);">N/A</span>
+                {% endif %}
+              </td>
+              <td>{{ pred.model_name }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% else %}
+    <div class="card empty-state">
+      <div class="empty-icon">📜</div>
+      <h3>No Prediction History Found</h3>
+      <p>Every time you evaluate flood risk using the form, the inputs and classification results will be automatically archived here.</p>
+      <a href="/" class="btn btn-primary">Make a Prediction Now</a>
+    </div>
+    {% endif %}
+  </main>
+
+  <footer class="footer">
+    <p>Rising Waters — Machine Learning Based Flood Susceptibility Assessment System</p>
+  </footer>
+
+  <script>
+    function confirmClear() {
+      return confirm("Are you sure you want to permanently delete all prediction history? This action cannot be undone.");
+    }
+  </script>
+</body>
+</html>

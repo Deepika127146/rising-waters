@@ -7,8 +7,16 @@ venv/
 env/
 *.egg-info/
 .DS_Store
-models/*.pkl
-!models/.gitkeep
+# Large data files (>100MB) exceeding GitHub upload limits
+data/sources_investigation/daily.parquet
+
+# Embedded sub-repositories
+data/sources_investigation/cwc-flood-forecasts/
+
 data/*.png
 .vscode/
 .idea/
+*.db
+*.db-shm
+*.db-wal
+.pytest_cache/

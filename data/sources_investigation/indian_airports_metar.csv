@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+        <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IEM :: Network Station Tables</title>
+    <meta name="description" content="Iowa State University, Iowa Environmental Mesonet">
+    <meta name="author" content="daryl herzmann akrherz@iastate.edu">
+
+    <link href="/vendor/bootstrap/5.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons for UI and navigation -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="/css/iastate-iem.css" rel="stylesheet">
+
+    <!-- Any page specific headextra content here -->
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/css/tom-select.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/css/tom-select.bootstrap5.css" rel="stylesheet">
+    <!-- Essential Social Tags -->
+    <meta property="og:title" content="IEM :: Network Station Tables">
+    <meta property="og:description" content="Iowa Environmental Mesonet of Iowa State University">
+    <meta property="og:image" content="https://mesonet.agron.iastate.edu/images/logo_large.png">
+    <meta property="og:url" content="https://mesonet.agron.iastate.edu/sites/networks.php?network=IN__ASOS&amp;format=csv">
+        <meta name="twitter:card" content="summary">
+
+    <!-- Non-essential -->
+    <meta name="twitter:creator" content="@akrherz">
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/apple-touch-icon-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.png">
+  </head>
+
+  <body>
+    <a href="#main-content" class="visually-hidden-focusable">Skip to main content</a>
+<header>
+<!-- Mobile navbar: Simple single row with logo, search, and hamburger -->
+<nav class="navbar-site d-block d-lg-none" aria-label="Utility navigation">
+    <div class="container">
+        <div class="mobile-navbar-row d-flex align-items-center">
+            <div class="mobile-logo me-2">
+                <a href="/" title="Home">
+                    <img src="/images/logo_small.png" alt="IEM" height="30">
+                </a>
+            </div>
+            
+            <div class="mobile-search flex-fill me-2">
+                <form action="/search" method="GET" role="search">
+                    <input name="q" aria-label="Search" title="Search" placeholder="Search 'DSM' 'autoplot 100' 'street address'" type="text" class="form-control form-control-sm">
+                </form>
+            </div>
+            
+            <div class="mobile-menu d-flex align-items-center">
+                <!-- Utility toggler removed per design: keep only primary-nav toggler -->
+                <button type="button" class="navbar-toggler p-1 ms-2" data-bs-toggle="collapse" data-bs-target="#navbar-menu-collapse" aria-controls="navbar-menu-collapse" aria-expanded="false" aria-label="Toggle primary navigation">
+                    <span class="navbar-toggler-icon"></span>
+                    <span class="visually-hidden">Primary navigation</span>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile site links (contact, disclaimer, apps) now unified target -->
+        <div class="collapse" id="mobile-nav-collapse">
+            <ul class="nav navbar-nav mobile-site-nav" aria-label="Utility navigation links">
+                <li class="nav-item"><a class="nav-link" href="/info/contacts.php">contact us</a></li>
+                <li class="nav-item"><a class="nav-link" href="/disclaimer.php">disclaimer</a></li>
+                <li class="nav-item"><a class="nav-link" href="/apps.php">apps</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Desktop navbar: ISU wordmark on left, search and links stacked on right -->
+<nav class="navbar-site d-none d-lg-block" aria-label="Utility navigation">
+    <div class="container">
+        <div class="desktop-navbar-row">
+            <div class="desktop-wordmark">
+                <a href="/" title="Home" class="wordmark-unit">
+                    <span class="wordmark-isu">Iowa State University</span>
+                    <span class="wordmark-unit-title">Iowa Environmental Mesonet</span>
+                </a>
+            </div>
+            
+            <div class="desktop-right">
+                <div class="desktop-search">
+                    <form action="/search" method="GET" role="search">
+                        <input name="q" aria-label="Search" title="Search" placeholder="Search 'DSM' 'autoplot 100' 'street address'" type="text" class="form-control">
+                    </form>
+                </div>
+                
+                <div class="desktop-links">
+                    <ul class="nav navbar-nav">
+                        <li class="nav-item"><a class="nav-link" href="/info/contacts.php">contact us</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/disclaimer.php">disclaimer</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/apps.php">apps</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+</header>
+
+<!-- Main navigation menu navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom" aria-label="Primary navigation">
+    <div class="container">
+        <!-- Desktop IEM logo (visible in main nav on desktop) -->
+        <div class="d-none d-lg-block">
+            <a href="/"><img style="height: 50px;" alt="IEM" class="img-fluid float-start" src="/images/logo_small.png" /></a>
+        </div>
+        
+    <!-- Main navigation menu (collapsible on mobile) -->
+    <div class="navbar-collapse collapse" id="navbar-menu-collapse">
+            <div class="d-none d-lg-block">
+                <ul class="nav navbar-nav">
+                    <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+                        href="#" aria-label="Home resources menu"> <i class="bi bi-house-fill" aria-hidden="true"></i><span class="visually-hidden">Home resources</span> </a>
+                        <ul class="dropdown-menu">
+<li><a class="dropdown-item" href="/projects/iao/">Iowa Atmospheric Observatory</a></li>
+<li><a class="dropdown-item" href="/">Iowa Environmental Mesonet</a></li>
+<li><a class="dropdown-item" href="https://cocorahs.org">CoCoRaHS</a></li>
+<li><a class="dropdown-item" href="https://dailyerosion.org">Daily Erosion Project</a></li>
+<li><a class="dropdown-item" href="https://weather.im">Weather.IM Project</a></li>
+                        </ul>
+                    </li>
+<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Apps</a><ul class="dropdown-menu"><li><a class="dropdown-item" href="/apps.php">Application Index</a></li>
+<li><a class="dropdown-item" href="/plotting/auto/">Automated Data Plotting</a></li>
+<li><a class="dropdown-item" href="/climodat/">Climodat</a></li>
+<li><a class="dropdown-item" href="/climodat/monitor.php">Climodat Monitor</a></li>
+<li><a class="dropdown-item" href="/explorer/">IEM Explorer</a></li>
+<li><a class="dropdown-item" href="/rainfall/obhour.phtml">Hourly Precip</a></li>
+<li><a class="dropdown-item" href="/GIS/apps/rview/warnings.phtml">Interactive Radar</a></li>
+<li><a class="dropdown-item" href="/topics/pests/">Pest Maps + Forecasting</a></li>
+<li><a class="dropdown-item" href="/my/current.phtml">Sortable Currents</a></li>
+<li><a class="dropdown-item" href="/timemachine/">Time Machine</a></li>
+<li><a class="dropdown-item" href="/sites/windrose.phtml?station=AMW&amp;network=IA_ASOS">Wind Roses</a></li>
+</ul></li>
+<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Areas</a><ul class="dropdown-menu"><li><a class="dropdown-item" href="/agweather/">Ag Weather/Climate Info</a></li>
+<li><a class="dropdown-item" href="/archive/">Archive Mainpage</a></li>
+<li><a class="dropdown-item" href="/climate/">Climate Mainpage</a></li>
+<li><a class="dropdown-item" href="/current/">Current Mainpage</a></li>
+<li><a class="dropdown-item" href="/dm/">Drought</a></li>
+<li><a class="dropdown-item" href="/GIS/">GIS Mainpage</a></li>
+<li><a class="dropdown-item" href="/nws/">NWS Mainpage</a></li>
+<li><a class="dropdown-item" href="/current/severe.phtml">Severe Weather Mainpage</a></li>
+</ul></li>
+<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Datasets</a><ul class="dropdown-menu"><li><a class="dropdown-item" href="/COOP/extremes.php">Daily Climatology</a></li>
+<li><a class="dropdown-item" href="/request/daily.phtml">Daily Observations</a></li>
+<li><a class="dropdown-item" href="/info/datasets/">Dataset Documentation</a></li>
+<li><a class="dropdown-item" href="/iemre/">IEM Reanalysis</a></li>
+<li><a class="dropdown-item" href="/mos/">Model Output Statistics</a></li>
+<li><a class="dropdown-item" href="/docs/nexrad_mosaic/">NEXRAD Mosaic</a></li>
+<li><a class="dropdown-item" href="/request/gis/pireps.php">PIREP - Pilot Reports</a></li>
+<li><a class="dropdown-item" href="/roads/">Roads Mainpage</a></li>
+<li><a class="dropdown-item" href="/current/radar.phtml">RADAR &amp; Satellite</a></li>
+<li><a class="dropdown-item" href="/rainfall/">Rainfall Data</a></li>
+<li><a class="dropdown-item" href="/archive/raob/">Sounding Archive</a></li>
+<li><a class="dropdown-item" href="/smos/">Soil Moisture Satellite</a></li>
+</ul></li>
+<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Info</a><ul class="dropdown-menu"><li><a class="dropdown-item" href="/info.php">Info Mainpage</a></li>
+<li><a class="dropdown-item" href="/onsite/features/past.php">Daily Features</a></li>
+<li><a class="dropdown-item" href="/info/links.php">Links</a></li>
+<li><a class="dropdown-item" href="/onsite/news.phtml">News</a></li>
+<li><a class="dropdown-item" href="/present/">Presentations</a></li>
+<li><a class="dropdown-item" href="/info/refs.php">Referenced By</a></li>
+<li><a class="dropdown-item" href="/sites/locate.php">Station Data and Metadata</a></li>
+<li><a class="dropdown-item" href="/QC/">Quality Control</a></li>
+<li><a class="dropdown-item" href="/info/variables.phtml">Variables</a></li>
+</ul></li>
+<li class="nav-item dropdown active"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Networks</a><ul class="dropdown-menu"><li><a class="dropdown-item active" href="/sites/networks.php">Network Tables</a></li>
+<li><a class="dropdown-item" href="/ASOS/">ASOS/AWOS Airports</a></li>
+<li><a class="dropdown-item" href="/cocorahs/">CoCoRaHS - Citizen Science</a></li>
+<li><a class="dropdown-item" href="/DCP/">DCP/HADS/SHEF - Hydrological</a></li>
+<li><a class="dropdown-item" href="/COOP/">NWS COOP - Daily Climate</a></li>
+<li><a class="dropdown-item" href="/agclimate/">ISU Soil Moisture</a></li>
+<li><a class="dropdown-item" href="/nstl_flux/">NLAE Flux</a></li>
+<li><a class="dropdown-item" href="/RWIS/">RWIS - Roadway Weather</a></li>
+<li><a class="dropdown-item" href="/scan/">SCAN - NRCS Soil Climate</a></li>
+<li><a class="dropdown-item" href="/other/">Other</a></li>
+<li><a class="dropdown-item" href="/uscrn/">US Climate Reference</a></li>
+</ul></li>
+<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">NWS Data</a><ul class="dropdown-menu"><li><a class="dropdown-item" href="/nws/">NWS Mainpage</a></li>
+<li><a class="dropdown-item" href="/lsr/">Local Storm Report App</a></li>
+<li><a class="dropdown-item" href="/cow/">IEM Cow (SBW Verification)</a></li>
+<li><a class="dropdown-item" href="/raccoon/">IEM Raccoon (SBW Powerpoints)</a></li>
+<li><a class="dropdown-item" href="/river/">River Summary</a></li>
+<li><a class="dropdown-item" href="/GIS/goes.phtml">Satellite Data</a></li>
+<li><a class="dropdown-item" href="/vtec/search.php">Search for Warnings</a></li>
+<li><a class="dropdown-item" href="/nws/sps_search/">Special Weather Statement (SPS) Search</a></li>
+<li><a class="dropdown-item" href="/nws/spc_outlook_search/">SPC Convective Outlook / MCD Search</a></li>
+<li><a class="dropdown-item" href="/GIS/apps/rview/watch.phtml">SPC Watches</a></li>
+<li><a class="dropdown-item" href="/nws/text.php">Text Archives Mainpage</a></li>
+<li><a class="dropdown-item" href="/wx/afos/list.phtml">Text Listing by WFO/Center/Product</a></li>
+<li><a class="dropdown-item" href="/wx/afos/">Text by Product ID</a></li>
+<li><a class="dropdown-item" href="/vtec/">VTEC Browser</a></li>
+</ul></li>
+<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Services</a><ul class="dropdown-menu"><li><a class="dropdown-item" href="/api/">API Mainpage</a></li>
+<li><a class="dropdown-item" href="/api/#cgi">CGI / Bulk Data</a></li>
+<li><a class="dropdown-item" href="/request/grx/">Gibson Ridge Placefiles</a></li>
+<li><a class="dropdown-item" href="/projects/iembot/">iembot</a></li>
+<li><a class="dropdown-item" href="/api/#json">JSON Webservices</a></li>
+<li><a class="dropdown-item" href="/request/ldm.php">LDM</a></li>
+<li><a class="dropdown-item" href="/request/maxcsv.py?help">Max CSV</a></li>
+<li><a class="dropdown-item" href="/ogc/">OGC Webservices</a></li>
+<li><a class="dropdown-item" href="/GIS/radmap_api.phtml">RadMap API</a></li>
+<li><a class="dropdown-item" href="/GIS/radview.phtml">RADAR Services</a></li>
+</ul></li>
+<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Webcams</a><ul class="dropdown-menu"><li><a class="dropdown-item" href="/projects/webcam.php">Webcam mainpage</a></li>
+<li><a class="dropdown-item" href="/current/bloop.phtml">Build your own lapses</a></li>
+<li><a class="dropdown-item" href="/cool/">Cool lapses</a></li>
+<li><a class="dropdown-item" href="/current/viewer.phtml">IEM Webcam Viewer</a></li>
+<li><a class="dropdown-item" href="/current/isucams.phtml">ISU Campus Webcams</a></li>
+<li><a class="dropdown-item" href="/current/camlapse/">Recent lapses</a></li>
+<li><a class="dropdown-item" href="/current/webcam.php">Still images</a></li>
+</ul></li>
+                </ul>
+            </div>
+            <div class="d-lg-none py-2">
+                <div class="accordion" id="mobile-primary-nav-accordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="mobile-nav-home-heading">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#mobile-nav-home-collapse" aria-expanded="false"
+                                aria-controls="mobile-nav-home-collapse">Home</button>
+                        </h2>
+                        <div id="mobile-nav-home-collapse" class="accordion-collapse collapse"
+                            aria-labelledby="mobile-nav-home-heading" data-bs-parent="#mobile-primary-nav-accordion">
+                            <div class="accordion-body py-2">
+<a class="d-block py-1 text-decoration-none" href="/projects/iao/">Iowa Atmospheric Observatory</a>
+<a class="d-block py-1 text-decoration-none" href="/">Iowa Environmental Mesonet</a>
+<a class="d-block py-1 text-decoration-none" href="https://cocorahs.org">CoCoRaHS</a>
+<a class="d-block py-1 text-decoration-none" href="https://dailyerosion.org">Daily Erosion Project</a>
+<a class="d-block py-1 text-decoration-none" href="https://weather.im">Weather.IM Project</a>
+                            </div>
+                        </div>
+                    </div>
+<div class="accordion-item"><h2 class="accordion-header" id="mobile-nav-tab-0-heading"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mobile-nav-tab-0-collapse" aria-expanded="false" aria-controls="mobile-nav-tab-0-collapse">Apps</button></h2><div id="mobile-nav-tab-0-collapse" class="accordion-collapse collapse" aria-labelledby="mobile-nav-tab-0-heading" data-bs-parent="#mobile-primary-nav-accordion"><div class="accordion-body py-2"><a class="d-block py-1 text-decoration-none" href="/apps.php">Application Index</a>
+<a class="d-block py-1 text-decoration-none" href="/plotting/auto/">Automated Data Plotting</a>
+<a class="d-block py-1 text-decoration-none" href="/climodat/">Climodat</a>
+<a class="d-block py-1 text-decoration-none" href="/climodat/monitor.php">Climodat Monitor</a>
+<a class="d-block py-1 text-decoration-none" href="/explorer/">IEM Explorer</a>
+<a class="d-block py-1 text-decoration-none" href="/rainfall/obhour.phtml">Hourly Precip</a>
+<a class="d-block py-1 text-decoration-none" href="/GIS/apps/rview/warnings.phtml">Interactive Radar</a>
+<a class="d-block py-1 text-decoration-none" href="/topics/pests/">Pest Maps + Forecasting</a>
+<a class="d-block py-1 text-decoration-none" href="/my/current.phtml">Sortable Currents</a>
+<a class="d-block py-1 text-decoration-none" href="/timemachine/">Time Machine</a>
+<a class="d-block py-1 text-decoration-none" href="/sites/windrose.phtml?station=AMW&amp;network=IA_ASOS">Wind Roses</a>
+</div></div></div>
+<div class="accordion-item"><h2 class="accordion-header" id="mobile-nav-tab-1-heading"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mobile-nav-tab-1-collapse" aria-expanded="false" aria-controls="mobile-nav-tab-1-collapse">Areas</button></h2><div id="mobile-nav-tab-1-collapse" class="accordion-collapse collapse" aria-labelledby="mobile-nav-tab-1-heading" data-bs-parent="#mobile-primary-nav-accordion"><div class="accordion-body py-2"><a class="d-block py-1 text-decoration-none" href="/agweather/">Ag Weather/Climate Info</a>
+<a class="d-block py-1 text-decoration-none" href="/archive/">Archive Mainpage</a>
+<a class="d-block py-1 text-decoration-none" href="/climate/">Climate Mainpage</a>
+<a class="d-block py-1 text-decoration-none" href="/current/">Current Mainpage</a>
+<a class="d-block py-1 text-decoration-none" href="/dm/">Drought</a>
+<a class="d-block py-1 text-decoration-none" href="/GIS/">GIS Mainpage</a>
+<a class="d-block py-1 text-decoration-none" href="/nws/">NWS Mainpage</a>
+<a class="d-block py-1 text-decoration-none" href="/current/severe.phtml">Severe Weather Mainpage</a>
+</div></div></div>
+<div class="accordion-item"><h2 class="accordion-header" id="mobile-nav-tab-2-heading"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mobile-nav-tab-2-collapse" aria-expanded="false" aria-controls="mobile-nav-tab-2-collapse">Datasets</button></h2><div id="mobile-nav-tab-2-collapse" class="accordion-collapse collapse" aria-labelledby="mobile-nav-tab-2-heading" data-bs-parent="#mobile-primary-nav-accordion"><div class="accordion-body py-2"><a class="d-block py-1 text-decoration-none" href="/COOP/extremes.php">Daily Climatology</a>
+<a class="d-block py-1 text-decoration-none" href="/request/daily.phtml">Daily Observations</a>
+<a class="d-block py-1 text-decoration-none" href="/info/datasets/">Dataset Documentation</a>
+<a class="d-block py-1 text-decoration-none" href="/iemre/">IEM Reanalysis</a>
+<a class="d-block py-1 text-decoration-none" href="/mos/">Model Output Statistics</a>
+<a class="d-block py-1 text-decoration-none" href="/docs/nexrad_mosaic/">NEXRAD Mosaic</a>
+<a class="d-block py-1 text-decoration-none" href="/request/gis/pireps.php">PIREP - Pilot Reports</a>
+<a class="d-block py-1 text-decoration-none" href="/roads/">Roads Mainpage</a>
+<a class="d-block py-1 text-decoration-none" href="/current/radar.phtml">RADAR &amp; Satellite</a>
+<a class="d-block py-1 text-decoration-none" href="/rainfall/">Rainfall Data</a>
+<a class="d-block py-1 text-decoration-none" href="/archive/raob/">Sounding Archive</a>
+<a class="d-block py-1 text-decoration-none" href="/smos/">Soil Moisture Satellite</a>
+</div></div></div>
+<div class="accordion-item"><h2 class="accordion-header" id="mobile-nav-tab-3-heading"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mobile-nav-tab-3-collapse" aria-expanded="false" aria-controls="mobile-nav-tab-3-collapse">Info</button></h2><div id="mobile-nav-tab-3-collapse" class="accordion-collapse collapse" aria-labelledby="mobile-nav-tab-3-heading" data-bs-parent="#mobile-primary-nav-accordion"><div class="accordion-body py-2"><a class="d-block py-1 text-decoration-none" href="/info.php">Info Mainpage</a>
+<a class="d-block py-1 text-decoration-none" href="/onsite/features/past.php">Daily Features</a>
+<a class="d-block py-1 text-decoration-none" href="/info/links.php">Links</a>
+<a class="d-block py-1 text-decoration-none" href="/onsite/news.phtml">News</a>
+<a class="d-block py-1 text-decoration-none" href="/present/">Presentations</a>
+<a class="d-block py-1 text-decoration-none" href="/info/refs.php">Referenced By</a>
+<a class="d-block py-1 text-decoration-none" href="/sites/locate.php">Station Data and Metadata</a>
+<a class="d-block py-1 text-decoration-none" href="/QC/">Quality Control</a>
+<a class="d-block py-1 text-decoration-none" href="/info/variables.phtml">Variables</a>
+</div></div></div>
+<div class="accordion-item"><h2 class="accordion-header" id="mobile-nav-tab-4-heading"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mobile-nav-tab-4-collapse" aria-expanded="false" aria-controls="mobile-nav-tab-4-collapse">Networks</button></h2><div id="mobile-nav-tab-4-collapse" class="accordion-collapse collapse" aria-labelledby="mobile-nav-tab-4-heading" data-bs-parent="#mobile-primary-nav-accordion"><div class="accordion-body py-2"><a class="d-block py-1 text-decoration-none fw-semibold text-primary" href="/sites/networks.php">Network Tables</a>
+<a class="d-block py-1 text-decoration-none" href="/ASOS/">ASOS/AWOS Airports</a>
+<a class="d-block py-1 text-decoration-none" href="/cocorahs/">CoCoRaHS - Citizen Science</a>
+<a class="d-block py-1 text-decoration-none" href="/DCP/">DCP/HADS/SHEF - Hydrological</a>
+<a class="d-block py-1 text-decoration-none" href="/COOP/">NWS COOP - Daily Climate</a>
+<a class="d-block py-1 text-decoration-none" href="/agclimate/">ISU Soil Moisture</a>
+<a class="d-block py-1 text-decoration-none" href="/nstl_flux/">NLAE Flux</a>
+<a class="d-block py-1 text-decoration-none" href="/RWIS/">RWIS - Roadway Weather</a>
+<a class="d-block py-1 text-decoration-none" href="/scan/">SCAN - NRCS Soil Climate</a>
+<a class="d-block py-1 text-decoration-none" href="/other/">Other</a>
+<a class="d-block py-1 text-decoration-none" href="/uscrn/">US Climate Reference</a>
+</div></div></div>
+<div class="accordion-item"><h2 class="accordion-header" id="mobile-nav-tab-5-heading"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mobile-nav-tab-5-collapse" aria-expanded="false" aria-controls="mobile-nav-tab-5-collapse">NWS Data</button></h2><div id="mobile-nav-tab-5-collapse" class="accordion-collapse collapse" aria-labelledby="mobile-nav-tab-5-heading" data-bs-parent="#mobile-primary-nav-accordion"><div class="accordion-body py-2"><a class="d-block py-1 text-decoration-none" href="/nws/">NWS Mainpage</a>
+<a class="d-block py-1 text-decoration-none" href="/lsr/">Local Storm Report App</a>
+<a class="d-block py-1 text-decoration-none" href="/cow/">IEM Cow (SBW Verification)</a>
+<a class="d-block py-1 text-decoration-none" href="/raccoon/">IEM Raccoon (SBW Powerpoints)</a>
+<a class="d-block py-1 text-decoration-none" href="/river/">River Summary</a>
+<a class="d-block py-1 text-decoration-none" href="/GIS/goes.phtml">Satellite Data</a>
+<a class="d-block py-1 text-decoration-none" href="/vtec/search.php">Search for Warnings</a>
+<a class="d-block py-1 text-decoration-none" href="/nws/sps_search/">Special Weather Statement (SPS) Search</a>
+<a class="d-block py-1 text-decoration-none" href="/nws/spc_outlook_search/">SPC Convective Outlook / MCD Search</a>
+<a class="d-block py-1 text-decoration-none" href="/GIS/apps/rview/watch.phtml">SPC Watches</a>
+<a class="d-block py-1 text-decoration-none" href="/nws/text.php">Text Archives Mainpage</a>
+<a class="d-block py-1 text-decoration-none" href="/wx/afos/list.phtml">Text Listing by WFO/Center/Product</a>
+<a class="d-block py-1 text-decoration-none" href="/wx/afos/">Text by Product ID</a>
+<a class="d-block py-1 text-decoration-none" href="/vtec/">VTEC Browser</a>
+</div></div></div>
+<div class="accordion-item"><h2 class="accordion-header" id="mobile-nav-tab-6-heading"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mobile-nav-tab-6-collapse" aria-expanded="false" aria-controls="mobile-nav-tab-6-collapse">Services</button></h2><div id="mobile-nav-tab-6-collapse" class="accordion-collapse collapse" aria-labelledby="mobile-nav-tab-6-heading" data-bs-parent="#mobile-primary-nav-accordion"><div class="accordion-body py-2"><a class="d-block py-1 text-decoration-none" href="/api/">API Mainpage</a>
+<a class="d-block py-1 text-decoration-none" href="/api/#cgi">CGI / Bulk Data</a>
+<a class="d-block py-1 text-decoration-none" href="/request/grx/">Gibson Ridge Placefiles</a>
+<a class="d-block py-1 text-decoration-none" href="/projects/iembot/">iembot</a>
+<a class="d-block py-1 text-decoration-none" href="/api/#json">JSON Webservices</a>
+<a class="d-block py-1 text-decoration-none" href="/request/ldm.php">LDM</a>
+<a class="d-block py-1 text-decoration-none" href="/request/maxcsv.py?help">Max CSV</a>
+<a class="d-block py-1 text-decoration-none" href="/ogc/">OGC Webservices</a>
+<a class="d-block py-1 text-decoration-none" href="/GIS/radmap_api.phtml">RadMap API</a>
+<a class="d-block py-1 text-decoration-none" href="/GIS/radview.phtml">RADAR Services</a>
+</div></div></div>
+<div class="accordion-item"><h2 class="accordion-header" id="mobile-nav-tab-7-heading"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mobile-nav-tab-7-collapse" aria-expanded="false" aria-controls="mobile-nav-tab-7-collapse">Webcams</button></h2><div id="mobile-nav-tab-7-collapse" class="accordion-collapse collapse" aria-labelledby="mobile-nav-tab-7-heading" data-bs-parent="#mobile-primary-nav-accordion"><div class="accordion-body py-2"><a class="d-block py-1 text-decoration-none" href="/projects/webcam.php">Webcam mainpage</a>
+<a class="d-block py-1 text-decoration-none" href="/current/bloop.phtml">Build your own lapses</a>
+<a class="d-block py-1 text-decoration-none" href="/cool/">Cool lapses</a>
+<a class="d-block py-1 text-decoration-none" href="/current/viewer.phtml">IEM Webcam Viewer</a>
+<a class="d-block py-1 text-decoration-none" href="/current/isucams.phtml">ISU Campus Webcams</a>
+<a class="d-block py-1 text-decoration-none" href="/current/camlapse/">Recent lapses</a>
+<a class="d-block py-1 text-decoration-none" href="/current/webcam.php">Still images</a>
+</div></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+<main role="main" id="main-content">
+<div class="container-fluid">
+<div class="card mb-4">
+<div class="card-header">
+<h3 class="mb-0">Network Location Tables</h3>
+</div>
+<div class="card-body">
+
+<div class="card float-end" style="width: 300px;">
+<div class="card-body">
+<a href="new-rss.php"><img src="/images/rss.gif" style="border: 0px;" alt="RSS" /></a> Feed of newly
+added stations.
+
+<div class="mt-3">
+<strong>Special Table Requests</strong>
+<ul class="list-unstyled mt-2">
+ <li><a href="networks.php?special=allasos&format=gempak&nohtml">Global METAR in GEMPAK Format</a></li>
+ <li><a href="networks.php?special=allasos&format=csv&nohtml">Global METAR in CSV Format</a></li>
+ <li><a href="/geojson/network/AZOS.geojson">Global METAR/ASOS in GeoJSON</a></li>
+ <li><a href="networks.php?special=alldcp&format=csv&nohtml">All DCPs in CSV Format</a></li>
+ <li><a href="networks.php?network=HAS_HML">Sites with HML Coverage</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+<p>With this form, you can generate a station table for any
+of the networks listed below.  If there is a particular format for a station
+table that you need, please <a href="/info/contacts.php">let us know</a>.</p>
+
+<form method="GET" action="networks.php" name="networkSelect">
+
+
+<div class="row mb-3">
+<div class="col-md-6">
+<label for="network" class="form-label"><strong>Select Observing Network:</strong></label>
+<select name="network" class="iemselect2"><option value="_ALL_">[_ALL_] All Networks</option><option value="HAS_HML">[HAS_HML] Stations with HML Data</option><option value="AF__ASOS">[AF__ASOS] Afghanistan ASOS</option><option value="AL_ASOS">[AL_ASOS] Alabama ASOS</option><option value="AL_COCORAHS">[AL_COCORAHS] Alabama CoCoRaHS</option><option value="AL_COOP">[AL_COOP] Alabama COOP</option><option value="AL_DCP">[AL_DCP] Alabama DCP</option><option value="ALCLIMATE">[ALCLIMATE] Alabama Long Term Climate Sites</option><option value="AK_ASOS">[AK_ASOS] Alaska ASOS</option><option value="AK_COCORAHS">[AK_COCORAHS] Alaska CoCoRaHS</option><option value="AK_COOP">[AK_COOP] Alaska COOP</option><option value="AK_DCP">[AK_DCP] Alaska DCP</option><option value="AKCLIMATE">[AKCLIMATE] Alaska Long Term Climate</option><option value="AK_RWIS">[AK_RWIS] Alaska RWIS</option><option value="AL__ASOS">[AL__ASOS] Albania ASOS</option><option value="CA_AB_ASOS">[CA_AB_ASOS] Alberta CA ASOS</option><option value="CA_AB_DCP">[CA_AB_DCP] Alberta CA DCP</option><option value="DZ__ASOS">[DZ__ASOS] Algeria ASOS</option><option value="AS_ASOS">[AS_ASOS] American Samoa ASOS</option><option value="AS_COCORAHS">[AS_COCORAHS] American Samoa CoCoRaHS</option><option value="ASCLIMATE">[ASCLIMATE] American Somoa Long Term Climate Sites</option><option value="AO__ASOS">[AO__ASOS] Angola ASOS</option><option value="AI__ASOS">[AI__ASOS] Anguilla ASOS</option><option value="AQ__ASOS">[AQ__ASOS] Antarctica ASOS</option><option value="AG__ASOS">[AG__ASOS] Antigua and Barbuda ASOS</option><option value="AG__DCP">[AG__DCP] Antigua and Barbuda DCP</option><option value="AR__ASOS">[AR__ASOS] Argentina ASOS</option><option value="AZ_ASOS">[AZ_ASOS] Arizona ASOS</option><option value="AZ_COCORAHS">[AZ_COCORAHS] Arizona CoCoRaHS</option><option value="AZ_COOP">[AZ_COOP] Arizona COOP</option><option value="AZ_DCP">[AZ_DCP] Arizona DCP</option><option value="AZCLIMATE">[AZCLIMATE] Arizona Long Term Climate Sites</option><option value="AZ_RWIS">[AZ_RWIS] Arizona RWIS</option><option value="AR_ASOS">[AR_ASOS] Arkansas ASOS</option><option value="AR_COCORAHS">[AR_COCORAHS] Arkansas CoCoRaHS</option><option value="AR_COOP">[AR_COOP] Arkansas COOP</option><option value="AR_DCP">[AR_DCP] Arkansas DCP</option><option value="ARCLIMATE">[ARCLIMATE] Arkansas Long Term Climate Sites</option><option value="AR_RWIS">[AR_RWIS] Arkansas RWIS</option><option value="AM__ASOS">[AM__ASOS] Armenia ASOS</option><option value="AW__ASOS">[AW__ASOS] Aruba ASOS</option><option value="AU__ASOS">[AU__ASOS] Australia ASOS</option><option value="AT__ASOS">[AT__ASOS] Austria ASOS</option><option value="AZ__ASOS">[AZ__ASOS] Azerbaijan ASOS</option><option value="BS__ASOS">[BS__ASOS] Bahamas ASOS</option><option value="BHS_COCORAHS">[BHS_COCORAHS] Bahamas CoCoRaHS</option><option value="BH__ASOS">[BH__ASOS] Bahrain ASOS</option><option value="BD__ASOS">[BD__ASOS] Bangladesh ASOS</option><option value="BD__DCP">[BD__DCP] Bangladesh DCP</option><option value="BB__ASOS">[BB__ASOS] Barbados ASOS</option><option value="BY__ASOS">[BY__ASOS] Belarus ASOS</option><option value="BE__ASOS">[BE__ASOS] Belgium ASOS</option><option value="BZ__ASOS">[BZ__ASOS] Belize ASOS</option><option value="BJ__ASOS">[BJ__ASOS] Benin ASOS</option><option value="BM__ASOS">[BM__ASOS] Bermuda ASOS</option><option value="BM__DCP">[BM__DCP] Bermuda DCP</option><option value="BT__ASOS">[BT__ASOS] Bhutan ASOS</option><option value="BO__ASOS">[BO__ASOS] Bolivia ASOS</option><option value="BA__ASOS">[BA__ASOS] Bosnia and Herzegovina ASOS</option><option value="BW__ASOS">[BW__ASOS] Botswana ASOS</option><option value="BR__ASOS">[BR__ASOS] Brazil ASOS</option><option value="CA_BC_ASOS">[CA_BC_ASOS] British Columbia CA ASOS</option><option value="CA_BC_DCP">[CA_BC_DCP] British Columbia CA DCP</option><option value="IO__ASOS">[IO__ASOS] British Indian Ocean Territory ASOS</option><option value="VG__ASOS">[VG__ASOS] British Virgin Islands ASOS</option><option value="BG__ASOS">[BG__ASOS] Bulgaria ASOS</option><option value="BF__ASOS">[BF__ASOS] Burkina Faso ASOS</option><option value="BI__ASOS">[BI__ASOS] Burundi ASOS</option><option value="CA_ASOS">[CA_ASOS] California ASOS</option><option value="CA_COCORAHS">[CA_COCORAHS] California CoCoRaHS</option><option value="CA_COOP">[CA_COOP] California COOP</option><option value="CA_DCP">[CA_DCP] California DCP</option><option value="CACLIMATE">[CACLIMATE] California Long Term Climate Sites</option><option value="CA_RWIS">[CA_RWIS] California RWIS</option><option value="KH__ASOS">[KH__ASOS] Cambodia ASOS</option><option value="CM__ASOS">[CM__ASOS] Cameroon ASOS</option><option value="CAN_COCORAHS">[CAN_COCORAHS] Canada CoCoRaHS</option><option value="CA_NB_DCP">[CA_NB_DCP] Canada New Brunswick DCP</option><option value="CA_PQ_DCP">[CA_PQ_DCP] Canada PQ DCP</option><option value="CA_SK_DCP">[CA_SK_DCP] Canada Saskatchewan DCP</option><option value="CA_YT_DCP">[CA_YT_DCP] Canada Yukon DCP</option><option value="CV__ASOS">[CV__ASOS] Cape Verde ASOS</option><option value="CF__ASOS">[CF__ASOS] Central African Republic ASOS</option><option value="TD__ASOS">[TD__ASOS] Chad ASOS</option><option value="CL__ASOS">[CL__ASOS] Chile ASOS</option><option value="CN__ASOS">[CN__ASOS] China ASOS</option><option value="CO__ASOS">[CO__ASOS] Colombia ASOS</option><option value="CO_ASOS">[CO_ASOS] Colorado ASOS</option><option value="CO_COCORAHS">[CO_COCORAHS] Colorado CoCoRaHS</option><option value="CO_COOP">[CO_COOP] Colorado COOP</option><option value="CO_DCP">[CO_DCP] Colorado DCP</option><option value="COCLIMATE">[COCLIMATE] Colorado Long Term Climate Sites</option><option value="CO_RWIS">[CO_RWIS] Colorado RWIS</option><option value="KM__ASOS">[KM__ASOS] Comoros ASOS</option><option value="CG__ASOS">[CG__ASOS] Congo ASOS</option><option value="CT_ASOS">[CT_ASOS] Connecticut ASOS</option><option value="CT_COCORAHS">[CT_COCORAHS] Connecticut CoCoRaHS</option><option value="CT_COOP">[CT_COOP] Connecticut COOP</option><option value="CT_DCP">[CT_DCP] Connecticut DCP</option><option value="CTCLIMATE">[CTCLIMATE] Connecticut Long Term Climate Sites</option><option value="CT_RWIS">[CT_RWIS] Connecticut RWIS</option><option value="CK__ASOS">[CK__ASOS] Cook Islands ASOS</option><option value="CR__ASOS">[CR__ASOS] Costa Rica ASOS</option><option value="HR__ASOS">[HR__ASOS] Croatia ASOS</option><option value="CU__ASOS">[CU__ASOS] Cuba ASOS</option><option value="CWSU">[CWSU] CWSU</option><option value="CY__ASOS">[CY__ASOS] Cyprus ASOS</option><option value="CZ__ASOS">[CZ__ASOS] Czech Republic ASOS</option><option value="DC_COCORAHS">[DC_COCORAHS] DC CoCoRaHS</option><option value="DE_ASOS">[DE_ASOS] Delaware ASOS</option><option value="DE_COCORAHS">[DE_COCORAHS] Delaware CoCoRaHS</option><option value="DE_COOP">[DE_COOP] Delaware COOP</option><option value="DE_DCP">[DE_DCP] Delaware DCP</option><option value="DECLIMATE">[DECLIMATE] Delaware Long Term Climate Sites</option><option value="DE_RWIS">[DE_RWIS] Delaware RWIS</option><option value="CD__ASOS">[CD__ASOS] Democratic Republic of the Congo ASOS</option><option value="DK__ASOS">[DK__ASOS] Denmark ASOS</option><option value="DC_COOP">[DC_COOP] District of Columbia COOP</option><option value="DC_DCP">[DC_DCP] District of Columbia DCP</option><option value="DCCLIMATE">[DCCLIMATE] District of Columbia Long Term Climate Sites</option><option value="DJ__ASOS">[DJ__ASOS] Djibouti ASOS</option><option value="DM__ASOS">[DM__ASOS] Dominica ASOS</option><option value="DO__ASOS">[DO__ASOS] Dominican Republic ASOS</option><option value="EC__ASOS">[EC__ASOS] Ecuador ASOS</option><option value="EG__ASOS">[EG__ASOS] Egypt ASOS</option><option value="SV__ASOS">[SV__ASOS] El Salvador ASOS</option><option value="SV__DCP">[SV__DCP] El Salvador DCP</option><option value="GQ__ASOS">[GQ__ASOS] Equatorial Guinea ASOS</option><option value="EE__ASOS">[EE__ASOS] Estonia ASOS</option><option value="SZ__ASOS">[SZ__ASOS] Eswatini ASOS</option><option value="ET__ASOS">[ET__ASOS] Ethiopia ASOS</option><option value="FK__ASOS">[FK__ASOS] Falkland Islands ASOS</option><option value="FM__ASOS">[FM__ASOS] Federated States of Micronesia ASOS</option><option value="FM__DCP">[FM__DCP] Federated States of Micronesia DCP</option><option value="FJ__ASOS">[FJ__ASOS] Fiji ASOS</option><option value="FI__ASOS">[FI__ASOS] Finland ASOS</option><option value="FL_ASOS">[FL_ASOS] Florida ASOS</option><option value="FL_COCORAHS">[FL_COCORAHS] Florida CoCoRaHS</option><option value="FL_COOP">[FL_COOP] Florida COOP</option><option value="FL_DCP">[FL_DCP] Florida DCP</option><option value="FLCLIMATE">[FLCLIMATE] Florida Long Term Climate Sites</option><option value="FL_RWIS">[FL_RWIS] Florida RWIS</option><option value="FR__ASOS">[FR__ASOS] France ASOS</option><option value="PF__ASOS">[PF__ASOS] French Polynesia ASOS</option><option value="GA__ASOS">[GA__ASOS] Gabon ASOS</option><option value="GM__ASOS">[GM__ASOS] Gambia ASOS</option><option value="GA_ASOS">[GA_ASOS] Georgia ASOS</option><option value="GA_COCORAHS">[GA_COCORAHS] Georgia CoCoRaHS</option><option value="GA_COOP">[GA_COOP] Georgia COOP</option><option value="GE__ASOS">[GE__ASOS] Georgia (Country) ASOS</option><option value="GA_DCP">[GA_DCP] Georgia DCP</option><option value="GACLIMATE">[GACLIMATE] Georgia Long Term Climate Sites</option><option value="GA_RWIS">[GA_RWIS] Georgia RWIS</option><option value="DE__ASOS">[DE__ASOS] Germany ASOS</option><option value="GH__ASOS">[GH__ASOS] Ghana ASOS</option><option value="GI__ASOS">[GI__ASOS] Gibraltar ASOS</option><option value="GLDNWS">[GLDNWS] Goodland NWS AWOS</option><option value="KY__ASOS">[KY__ASOS] Grand Cayman ASOS</option><option value="GB__ASOS">[GB__ASOS] Great Britain ASOS</option><option value="GR__ASOS">[GR__ASOS] Greece ASOS</option><option value="GL__ASOS">[GL__ASOS] Greenland ASOS</option><option value="GD__ASOS">[GD__ASOS] Grenada ASOS</option><option value="GP__ASOS">[GP__ASOS] Guadeloupe ASOS</option><option value="GU_ASOS">[GU_ASOS] Guam ASOS</option><option value="GU_COCORAHS">[GU_COCORAHS] Guam CoCoRaHS</option><option value="GU_DCP">[GU_DCP] Guam DCP</option><option value="GUCLIMATE">[GUCLIMATE] Guam Long Term Climate Sites</option><option value="GT__ASOS">[GT__ASOS] Guatemala ASOS</option><option value="GT__DCP">[GT__DCP] Guatemala DCP</option><option value="GN__ASOS">[GN__ASOS] Guinea ASOS</option><option value="GW__ASOS">[GW__ASOS] Guinea-Bissau ASOS</option><option value="GY__ASOS">[GY__ASOS] Guyana ASOS</option><option value="HT__ASOS">[HT__ASOS] Haiti ASOS</option><option value="HI_ASOS">[HI_ASOS] Hawaii ASOS</option><option value="HI_COCORAHS">[HI_COCORAHS] Hawaii CoCoRaHS</option><option value="HI_COOP">[HI_COOP] Hawaii COOP</option><option value="HI_DCP">[HI_DCP] Hawaii DCP</option><option value="HICLIMATE">[HICLIMATE] Hawaii Long Term Climate</option><option value="HN__ASOS">[HN__ASOS] Honduras ASOS</option><option value="HN__DCP">[HN__DCP] Hondurus DCP</option><option value="HK__ASOS">[HK__ASOS] Hong Kong ASOS</option><option value="HU__ASOS">[HU__ASOS] Hungary ASOS</option><option value="IS__ASOS">[IS__ASOS] Iceland ASOS</option><option value="ID_ASOS">[ID_ASOS] Idaho ASOS</option><option value="ID_COCORAHS">[ID_COCORAHS] Idaho CoCoRaHS</option><option value="ID_COOP">[ID_COOP] Idaho COOP</option><option value="ID_DCP">[ID_DCP] Idaho DCP</option><option value="IDCLIMATE">[IDCLIMATE] Idaho Long Term Climate Sites</option><option value="ID_RWIS">[ID_RWIS] Idaho RWIS</option><option value="IL_ASOS">[IL_ASOS] Illinois ASOS</option><option value="IL_COCORAHS">[IL_COCORAHS] Illinois CoCoRaHS</option><option value="IL_COOP">[IL_COOP] Illinois COOP</option><option value="IL_DCP">[IL_DCP] Illinois DCP</option><option value="ILCLIMATE">[ILCLIMATE] Illinois Long Term Climate Sites</option><option value="IL_RWIS">[IL_RWIS] Illinois RWIS</option><option value="IN__ASOS" selected>[IN__ASOS] India ASOS</option><option value="IN_ASOS">[IN_ASOS] Indiana ASOS</option><option value="IN_COCORAHS">[IN_COCORAHS] Indiana CoCoRaHS</option><option value="IN_COOP">[IN_COOP] Indiana COOP</option><option value="IN_DCP">[IN_DCP] Indiana DCP</option><option value="INCLIMATE">[INCLIMATE] Indiana Long Term Climate Sites</option><option value="IN_RWIS">[IN_RWIS] Indiana RWIS</option><option value="ID__ASOS">[ID__ASOS] Indonesia ASOS</option><option value="IA_ASOS">[IA_ASOS] Iowa ASOS</option><option value="IA_COCORAHS">[IA_COCORAHS] Iowa CoCoRaHS</option><option value="IA_COOP">[IA_COOP] Iowa COOP</option><option value="IA_DCP">[IA_DCP] Iowa DCP</option><option value="IA_HPD">[IA_HPD] Iowa HPD Sites</option><option value="IACLIMATE">[IACLIMATE] Iowa Long Term Climate Sites</option><option value="IA_RWIS">[IA_RWIS] Iowa RWIS</option><option value="ISUAG">[ISUAG] Iowa State Univ Ag Climate</option><option value="ISUSM">[ISUSM] Iowa State Univ Soil Moisture</option><option value="IR__ASOS">[IR__ASOS] Iran ASOS</option><option value="IQ__ASOS">[IQ__ASOS] Iraq ASOS</option><option value="IE__ASOS">[IE__ASOS] Ireland ASOS</option><option value="IL__ASOS">[IL__ASOS] Israel ASOS</option><option value="IT__ASOS">[IT__ASOS] Italy ASOS</option><option value="CI__ASOS">[CI__ASOS] Ivory Coast ASOS</option><option value="JM__ASOS">[JM__ASOS] Jamaica ASOS</option><option value="JP__ASOS">[JP__ASOS] Japan ASOS</option><option value="JO__ASOS">[JO__ASOS] Jordan ASOS</option><option value="KS_ASOS">[KS_ASOS] Kansas ASOS</option><option value="KS_COCORAHS">[KS_COCORAHS] Kansas CoCoRaHS</option><option value="KS_COOP">[KS_COOP] Kansas COOP</option><option value="KS_DCP">[KS_DCP] Kansas DCP</option><option value="KSCLIMATE">[KSCLIMATE] Kansas Long Term Climate Sites</option><option value="KS_RWIS">[KS_RWIS] Kansas RWIS</option><option value="KZ__ASOS">[KZ__ASOS] Kazakhstan ASOS</option><option value="KCCI">[KCCI] KCCI-TV SchoolNet</option><option value="KELO">[KELO] KELO-TV WeatherNet</option><option value="KY_ASOS">[KY_ASOS] Kentucky ASOS</option><option value="KY_COCORAHS">[KY_COCORAHS] Kentucky CoCoRaHS</option><option value="KY_COOP">[KY_COOP] Kentucky COOP</option><option value="KY_DCP">[KY_DCP] Kentucky DCP</option><option value="KYCLIMATE">[KYCLIMATE] Kentucky Long Term Climate Sites</option><option value="KY_RWIS">[KY_RWIS] Kentucky RWIS</option><option value="KE__ASOS">[KE__ASOS] Kenya ASOS</option><option value="KIMT">[KIMT] KIMT-TV StormNet</option><option value="KI__ASOS">[KI__ASOS] Kiribati ASOS</option><option value="KW__ASOS">[KW__ASOS] Kuwait ASOS</option><option value="KG__ASOS">[KG__ASOS] Kyrgyzstan ASOS</option><option value="LA__ASOS">[LA__ASOS] Lao ASOS</option><option value="LV__ASOS">[LV__ASOS] Latvia ASOS</option><option value="LB__ASOS">[LB__ASOS] Lebanon ASOS</option><option value="LS__ASOS">[LS__ASOS] Lesotho ASOS</option><option value="LR__ASOS">[LR__ASOS] Liberia ASOS</option><option value="LY__ASOS">[LY__ASOS] Libya ASOS</option><option value="LT__ASOS">[LT__ASOS] Lithuania ASOS</option><option value="LA_ASOS">[LA_ASOS] Louisiana ASOS</option><option value="LA_COCORAHS">[LA_COCORAHS] Louisiana CoCoRaHS</option><option value="LA_COOP">[LA_COOP] Louisiana COOP</option><option value="LA_DCP">[LA_DCP] Louisiana DCP</option><option value="LACLIMATE">[LACLIMATE] Louisiana Long Term Climate Sites</option><option value="LU__ASOS">[LU__ASOS] Luxembourg ASOS</option><option value="MK__ASOS">[MK__ASOS] Macedonia ASOS</option><option value="MG__ASOS">[MG__ASOS] Madagascar ASOS</option><option value="ME_ASOS">[ME_ASOS] Maine ASOS</option><option value="ME_COCORAHS">[ME_COCORAHS] Maine CoCoRaHS</option><option value="ME_COOP">[ME_COOP] Maine COOP</option><option value="ME_DCP">[ME_DCP] Maine DCP</option><option value="MECLIMATE">[MECLIMATE] Maine Long Term Climate Sites</option><option value="ME_RWIS">[ME_RWIS] Maine RWIS</option><option value="MW__ASOS">[MW__ASOS] Malawi ASOS</option><option value="MY__ASOS">[MY__ASOS] Malaysia ASOS</option><option value="MV__ASOS">[MV__ASOS] Maldives ASOS</option><option value="ML__ASOS">[ML__ASOS] Mali ASOS</option><option value="CA_MB_ASOS">[CA_MB_ASOS] Manitoba CA ASOS</option><option value="CA_MB_DCP">[CA_MB_DCP] Manitoba CA DCP</option><option value="MH__ASOS">[MH__ASOS] Marshall Islands ASOS</option><option value="MH__COOP">[MH__COOP] Marshall Islands COOP</option><option value="MH__DCP">[MH__DCP] Marshall Islands DCP</option><option value="MD_ASOS">[MD_ASOS] Maryland ASOS</option><option value="MD_COCORAHS">[MD_COCORAHS] Maryland CoCoRaHS</option><option value="MD_COOP">[MD_COOP] Maryland COOP</option><option value="MD_DCP">[MD_DCP] Maryland DCP</option><option value="MDCLIMATE">[MDCLIMATE] Maryland Long Term Climate Sites</option><option value="MD_RWIS">[MD_RWIS] Maryland RWIS</option><option value="MA_ASOS">[MA_ASOS] Massachusetts ASOS</option><option value="MA_COCORAHS">[MA_COCORAHS] Massachusetts CoCoRaHS</option><option value="MA_COOP">[MA_COOP] Massachusetts COOP</option><option value="MA_DCP">[MA_DCP] Massachusetts DCP</option><option value="MACLIMATE">[MACLIMATE] Massachusetts Long Term Climate Sites</option><option value="MA_RWIS">[MA_RWIS] Massachusetts RWIS</option><option value="MR__ASOS">[MR__ASOS] Mauritania ASOS</option><option value="MU__ASOS">[MU__ASOS] Mauritius ASOS</option><option value="MX__ASOS">[MX__ASOS] Mexico ASOS</option><option value="MX_BJ_DCP">[MX_BJ_DCP] Mexico BJ DCP</option><option value="MX_BR_DCP">[MX_BR_DCP] Mexico BR DCP</option><option value="MX_CM_DCP">[MX_CM_DCP] Mexico Campeche DCP</option><option value="MX_CH_DCP">[MX_CH_DCP] Mexico CH DCP</option><option value="MX_CP_DCP">[MX_CP_DCP] Mexico Chiapas DCP</option><option value="MX_CI_DCP">[MX_CI_DCP] Mexico Chihuahua DCP</option><option value="MX_CL_DCP">[MX_CL_DCP] Mexico CL DCP</option><option value="MX_DR_DCP">[MX_DR_DCP] Mexico DR DCP</option><option value="MX_DF_DCP">[MX_DF_DCP] Mexico Federal District DCP</option><option value="MX_GJ_DCP">[MX_GJ_DCP] Mexico GJ DCP</option><option value="MX_GR_DCP">[MX_GR_DCP] Mexico GR DCP</option><option value="MX_HD_DCP">[MX_HD_DCP] Mexico HD DCP</option><option value="MX_JL_DCP">[MX_JL_DCP] Mexico JL DCP</option><option value="MX_MC_DCP">[MX_MC_DCP] Mexico MC DCP</option><option value="MX_NR_DCP">[MX_NR_DCP] Mexico Morelos DCP</option><option value="MX_MR_DCP">[MX_MR_DCP] Mexico MR DCP</option><option value="MX_MX_DCP">[MX_MX_DCP] Mexico MX DCP</option><option value="MX_NL_DCP">[MX_NL_DCP] Mexico NL DCP</option><option value="MX_OX_DCP">[MX_OX_DCP] Mexico OX DCP</option><option value="MX_PB_DCP">[MX_PB_DCP] Mexico PB DCP</option><option value="MX_QO_DCP">[MX_QO_DCP] Mexico QO DCP</option><option value="MX_QR_DCP">[MX_QR_DCP] Mexico Quintana Roo DCP</option><option value="MX_SL_DCP">[MX_SL_DCP] Mexico San Luis Potosi DCP</option><option value="MX_SN_DCP">[MX_SN_DCP] Mexico SN DCP</option><option value="MX_SO_DCP">[MX_SO_DCP] Mexico SO DCP</option><option value="MX_TL_DCP">[MX_TL_DCP] Mexico Tiaxcala DCP</option><option value="MX_TP_DCP">[MX_TP_DCP] Mexico TP DCP</option><option value="MX_VC_DCP">[MX_VC_DCP] Mexico Veracruz DCP</option><option value="MX_YC_DCP">[MX_YC_DCP] Mexico Yucatan DCP</option><option value="MX_ZC_DCP">[MX_ZC_DCP] Mexico Zacatecas DCP</option><option value="MI_ASOS">[MI_ASOS] Michigan ASOS</option><option value="MI_COCORAHS">[MI_COCORAHS] Michigan CoCoRaHS</option><option value="MI_COOP">[MI_COOP] Michigan COOP</option><option value="MI_DCP">[MI_DCP] Michigan DCP</option><option value

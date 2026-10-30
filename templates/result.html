@@ -3,60 +3,141 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prediction Result | Rising Waters</title>
+  <title>Assessment Result | Rising Waters</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
 </head>
 <body>
   <header class="navbar">
-    <div class="navbar-brand">🌊 Rising Waters</div>
-    <div class="navbar-tagline">AI-Powered Flood Early-Warning System</div>
+    <div class="navbar-brand-group">
+      <a href="/" class="navbar-brand">🌊 Rising Waters</a>
+      <span class="navbar-tagline">Catchment Flood Susceptibility Assessment</span>
+    </div>
+    <nav class="navbar-nav">
+      <a href="/" class="nav-link {% if active_page == 'home' %}active{% endif %}">Home</a>
+      <a href="/dashboard" class="nav-link {% if active_page == 'dashboard' %}active{% endif %}">Dashboard</a>
+      <a href="/history" class="nav-link {% if active_page == 'history' %}active{% endif %}">History</a>
+    </nav>
   </header>
 
   <main class="container">
     <section class="result-card">
       {% if error %}
-        <div class="alert alert-danger">{{ error }}</div>
-        <a class="btn-back" href="/">← Back to form</a>
+        <div class="result-badge error">⚠️</div>
+        <h1 class="text-error">Validation / Assessment Error</h1>
+        <div class="alert alert-danger" style="text-align: left; margin: 1.5rem auto; max-width: 600px;">
+          <strong>Error Details:</strong> {{ error }}
+        </div>
+        <p style="color: var(--text-muted); max-width: 550px; margin: 0 auto 1.5rem;">
+          Please review the submitted parameters and ensure all values fall within physical meteorological and geographical boundaries.
+        </p>
+        <a class="btn btn-primary" href="/">← Return to Assessment Form</a>
+
       {% else %}
         <div class="result-badge {{ 'flood' if is_flood else 'safe' }}">
           {{ '🚨' if is_flood else '✅' }}
         </div>
         <h1 class="{{ 'text-flood' if is_flood else 'text-safe' }}">{{ result }}</h1>
+        <p class="result-subtitle">
+          Assessment Type: <strong>{{ assessment_type | default('Catchment Flood Susceptibility Assessment') }}</strong>
+        </p>
 
+        <!-- Submitted Parameters Table -->
         <table class="result-table">
+          {% if region is defined and region %}
           <tr>
-            <td>Estimated Annual Rainfall</td>
-            <td>{{ annual_rainfall }} mm</td>
+            <td>Geographical Region</td>
+            <td><strong>{{ region }} India</strong></td>
           </tr>
-          {% if confidence is not none %}
           <tr>
-            <td>Model Confidence</td>
-            <td>{{ confidence }}%</td>
+            <td>Climatological Season</td>
+            <td><strong>{{ season }}</strong></td>
+          </tr>
+          <tr>
+            <td>Seasonal Rainfall</td>
+            <td>{{ seasonal_rainfall }} mm</td>
+          </tr>
+          <tr>
+            <td>Mean Temperature</td>
+            <td>{{ temperature }} °C</td>
           </tr>
           {% endif %}
           <tr>
-            <td>Model Used</td>
+            <td>Annual Rainfall</td>
+            <td><strong>{{ annual_rainfall }} mm</strong></td>
+          </tr>
+          {% if winter_rainfall is defined %}
+          <tr>
+            <td>Winter Rainfall (Jan–Feb)</td>
+            <td>{{ winter_rainfall }} mm</td>
+          </tr>
+          <tr>
+            <td>Pre-Monsoon Rainfall (Mar–May)</td>
+            <td>{{ pre_monsoon_rainfall }} mm</td>
+          </tr>
+          <tr>
+            <td>Monsoon Rainfall (Jun–Sep)</td>
+            <td>{{ monsoon_rainfall }} mm</td>
+          </tr>
+          <tr>
+            <td>Post-Monsoon Rainfall (Oct–Dec)</td>
+            <td>{{ post_monsoon_rainfall }} mm</td>
+          </tr>
+          {% endif %}
+          {% if confidence is not none %}
+          <tr>
+            <td>Model-Estimated Score / Confidence</td>
+            <td>
+              <strong>{{ confidence }}%</strong>
+              <div class="field-subnote">
+                Model confidence score based on historical training distribution. Not a calibrated real-world probability.
+              </div>
+            </td>
+          </tr>
+          {% endif %}
+          <tr>
+            <td>Model Utilized</td>
             <td>{{ model_name }}</td>
+          </tr>
+          <tr>
+            <td>Persistence Status</td>
+            <td><span class="badge badge-success">✓ Saved to Database</span></td>
           </tr>
         </table>
 
-        {% if is_flood %}
-        <div class="alert alert-danger">
-          Recommended action: Issue advisory and prepare evacuation resources for this region.
+        <!-- Result Interpretation -->
+        <div class="explanation-box {{ 'danger' if is_flood else 'success' }}">
+          <h3>🔍 Assessment Interpretation</h3>
+          <p>
+            {% if explanation %}
+              {{ explanation }}
+            {% elif is_flood %}
+              Conditions reflect elevated macro-hydrological catchment flood susceptibility under the submitted baseline meteorological conditions.
+            {% else %}
+              Conditions reflect low macro-hydrological catchment flood susceptibility under standard baseline catchment drainage conditions.
+            {% endif %}
+          </p>
         </div>
-        {% else %}
-        <div class="alert alert-success">
-          Conditions currently indicate low flood risk. Continue routine monitoring.
-        </div>
-        {% endif %}
 
-        <a class="btn-back" href="/">← Run another prediction</a>
+        <!-- Mandatory Scientific Limitation Disclaimer -->
+        <div class="disclaimer-banner" style="margin-top: 1.8rem; text-align: left;">
+          <div class="disclaimer-icon">⚠️</div>
+          <div class="disclaimer-content">
+            <strong>Mandatory Scientific Limitation & Advisory Notice:</strong>
+            <p>{{ disclaimer }}</p>
+          </div>
+        </div>
+
+        <div class="result-actions">
+          <a class="btn btn-primary" href="/">← Run Another Assessment</a>
+          <a class="btn btn-secondary" href="/history">📋 View History</a>
+          <a class="btn btn-secondary" href="/dashboard">📊 View Dashboard</a>
+        </div>
       {% endif %}
     </section>
   </main>
 
   <footer class="footer">
-    <p>Rising Waters — Machine Learning Flood Prediction System</p>
+    <p>Rising Waters — Machine Learning Based Flood Susceptibility Assessment System</p>
   </footer>
 </body>
 </html>

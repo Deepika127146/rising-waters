@@ -3,42 +3,131 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rising Waters | Flood Prediction System</title>
+  <title>Rising Waters – Catchment Flood Susceptibility Assessment</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
 </head>
 <body>
   <header class="navbar">
-    <div class="navbar-brand">🌊 Rising Waters</div>
-    <div class="navbar-tagline">AI-Powered Flood Early-Warning System</div>
+    <div class="navbar-brand-group">
+      <a href="/" class="navbar-brand">🌊 Rising Waters</a>
+      <span class="navbar-tagline">Catchment Flood Susceptibility Assessment</span>
+    </div>
+    <nav class="navbar-nav">
+      <a href="/" class="nav-link {% if active_page == 'home' %}active{% endif %}">Home</a>
+      <a href="/dashboard" class="nav-link {% if active_page == 'dashboard' %}active{% endif %}">Dashboard</a>
+      <a href="/history" class="nav-link {% if active_page == 'history' %}active{% endif %}">History</a>
+    </nav>
   </header>
 
   <main class="container">
     <section class="hero">
-      <h1>Predict Flood Risk Before It Strikes</h1>
+      <h1>Rising Waters – Catchment Flood Susceptibility Assessment</h1>
       <p>
-        Enter current meteorological readings for a region to get an instant,
-        ML-powered flood risk classification.
+        Evaluate baseline macro-hydrological catchment flood susceptibility across Indian river basins
+        using climatological indicators and authentic historical observations.
       </p>
       {% if not model_ready %}
       <div class="alert alert-warning">
-        ⚠️ No trained model found yet. Run <code>python train_model.py</code> first.
+        ⚠️ No trained model found yet. Run model training first.
       </div>
       {% elif best_model_name %}
       <div class="alert alert-info">
-        Active model: <strong>{{ best_model_name }}</strong>
-        {% if accuracy_by_model %}
-          ({{ accuracy_by_model[best_model_name] }}% test accuracy)
-        {% endif %}
+        <span>⚡ Active Model: <strong>{{ best_model_name }}</strong> (Pipeline with Imputation, One-Hot Encoding & XGBoost Classifier)</span>
       </div>
       {% endif %}
     </section>
 
-    <section class="form-card">
-      <form action="/predict" method="POST">
-        <p class="form-hint">
-          Enter total rainfall (mm) recorded for each season. Annual rainfall
-          is calculated automatically as the sum of all four.
-        </p>
+    <!-- Scientific Limitation Disclaimer -->
+    <div class="disclaimer-banner">
+      <div class="disclaimer-icon">⚠️</div>
+      <div class="disclaimer-content">
+        <strong>Scientific Limitation & Advisory Notice:</strong>
+        <p>{{ disclaimer }}</p>
+      </div>
+    </div>
+
+    <!-- Interface Mode Switcher -->
+    <div class="mode-tabs">
+      <button type="button" class="tab-btn active" id="tab-susceptibility" onclick="showTab('susceptibility')">
+        🎯 Catchment Flood Susceptibility (XGBoost Pipeline)
+      </button>
+      <button type="button" class="tab-btn" id="tab-legacy" onclick="showTab('legacy')">
+        🌧️ Predict Flood Risk (Legacy Seasonal Model)
+      </button>
+    </div>
+
+    <!-- PRIMARY INTERFACE: Catchment Flood Susceptibility Assessment -->
+    <section class="form-card" id="card-susceptibility">
+      <div class="card-header-group">
+        <h2>Catchment Flood Susceptibility Assessment</h2>
+        <span class="badge badge-primary">Approved Stage 4 XGBoost Model</span>
+      </div>
+      <p class="form-hint">
+        Select geographical region, season, total annual rainfall, seasonal precipitation, and mean ambient temperature.
+        All inputs are validated against physical terrestrial limits.
+      </p>
+
+      <form action="/assess-susceptibility" method="POST" id="form-susceptibility">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="region">Geographical Region <span class="required">*</span></label>
+            <select id="region" name="region" required>
+              <option value="" disabled selected>-- Select Indian Region --</option>
+              {% for reg in regions %}
+              <option value="{{ reg }}">{{ reg }} India</option>
+              {% endfor %}
+            </select>
+            <small class="field-hint">Indian catchment geographical zone (e.g. South, West, East, Central, North)</small>
+          </div>
+
+          <div class="form-group">
+            <label for="season">Season <span class="required">*</span></label>
+            <select id="season" name="season" required>
+              <option value="" disabled selected>-- Select Season --</option>
+              {% for s in seasons %}
+              <option value="{{ s }}">{{ s }}</option>
+              {% endfor %}
+            </select>
+            <small class="field-hint">Climatological season of observation</small>
+          </div>
+
+          <div class="form-group">
+            <label for="annual_rainfall">Annual Rainfall (mm) <span class="required">*</span></label>
+            <input type="number" step="0.1" id="annual_rainfall" name="annual_rainfall" placeholder="e.g. 2400.0" min="0" max="15000" required />
+            <small class="field-hint">Total cumulative annual precipitation (0 – 15,000 mm)</small>
+          </div>
+
+          <div class="form-group">
+            <label for="seasonal_rainfall">Seasonal Rainfall (mm) <span class="required">*</span></label>
+            <input type="number" step="0.1" id="seasonal_rainfall" name="seasonal_rainfall" placeholder="e.g. 1850.0" min="0" max="12000" required />
+            <small class="field-hint">Cumulative rainfall for the selected season (must not exceed annual)</small>
+          </div>
+
+          <div class="form-group" style="grid-column: span 2;">
+            <label for="temperature">Mean Temperature (°C) <span class="required">*</span></label>
+            <input type="number" step="0.1" id="temperature" name="temperature" placeholder="e.g. 28.5" min="-50" max="60" required />
+            <small class="field-hint">Catchment-average surface temperature (-50°C to 60°C)</small>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-predict" id="btn-assess-susceptibility" {% if not model_ready %}disabled{% endif %}>
+          Assess Susceptibility
+        </button>
+      </form>
+    </section>
+
+    <!-- LEGACY INTERFACE: 4-Season Rainfall Flood Risk -->
+    <section class="form-card" id="card-legacy" style="display: none;">
+      <div class="card-header-group">
+        <h2>Predict Flood Risk (Legacy Seasonal Model)</h2>
+        <span class="badge badge-secondary">Historical Decision Tree Model</span>
+      </div>
+      <p class="form-hint">
+        Enter total rainfall (mm) recorded for each season. Annual rainfall
+        is calculated automatically as the sum of all four seasons.
+      </p>
+
+      <form action="/predict" method="POST" id="form-legacy">
         <div class="form-grid">
           <div class="form-group">
             <label for="winter_rainfall">Winter Rainfall — Jan–Feb (mm)</label>
@@ -61,33 +150,64 @@
           </div>
         </div>
 
-        <button type="submit" class="btn-predict" {% if not model_ready %}disabled{% endif %}>
+        <button type="submit" class="btn-predict" id="btn-predict-legacy" {% if not model_ready %}disabled{% endif %}>
           Predict Flood Risk
         </button>
       </form>
     </section>
 
+    <!-- Scientific System Overview -->
     <section class="scenarios">
-      <h2>How It's Used</h2>
+      <h2>Scientific Methodology & Principles</h2>
       <div class="scenario-grid">
         <div class="scenario-card">
-          <h3>🚨 Early Warning</h3>
-          <p>Meteorologists enter live readings to trigger evacuation advisories hours in advance.</p>
+          <h3>🏞️ Macro-Catchment Susceptibility</h3>
+          <p>
+            Assesses baseline catchment susceptibility under seasonal precipitation volumes and climatological conditions,
+            calibrated against verified CWC gauge records and INDOFLOODS observations.
+          </p>
         </div>
         <div class="scenario-card">
-          <h3>🧭 Resource Allocation</h3>
-          <p>Disaster coordinators monitor multiple regions at once to prioritize response teams.</p>
+          <h3>⚙️ End-to-End Pipeline</h3>
+          <p>
+            Uses an integrated scikit-learn & XGBoost pipeline handling median numeric imputation, standard scaling,
+            and one-hot categorical encoding directly in memory without synthetic fabrication.
+          </p>
         </div>
         <div class="scenario-card">
-          <h3>📊 Model Validation</h3>
-          <p>Analysts benchmark predictions against historical flood records for reliability.</p>
+          <h3>⚖️ Rigorous Boundaries</h3>
+          <p>
+            Strictly distinguishes baseline catchment susceptibility from real-time dynamic evacuation alerts.
+            Dynamic warnings require live telemetry from official agencies.
+          </p>
         </div>
       </div>
     </section>
   </main>
 
   <footer class="footer">
-    <p>Rising Waters — Machine Learning Flood Prediction System</p>
+    <p>Rising Waters — Machine Learning Based Flood Susceptibility Assessment System</p>
   </footer>
+
+  <script>
+    function showTab(mode) {
+      const cardSusc = document.getElementById('card-susceptibility');
+      const cardLeg = document.getElementById('card-legacy');
+      const tabSusc = document.getElementById('tab-susceptibility');
+      const tabLeg = document.getElementById('tab-legacy');
+
+      if (mode === 'susceptibility') {
+        cardSusc.style.display = 'block';
+        cardLeg.style.display = 'none';
+        tabSusc.classList.add('active');
+        tabLeg.classList.remove('active');
+      } else {
+        cardSusc.style.display = 'none';
+        cardLeg.style.display = 'block';
+        tabSusc.classList.remove('active');
+        tabLeg.classList.add('active');
+      }
+    }
+  </script>
 </body>
 </html>

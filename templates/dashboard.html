@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard | Rising Waters</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header class="navbar">
+    <div class="navbar-brand-group">
+      <a href="/" class="navbar-brand">🌊 Rising Waters</a>
+      <span class="navbar-tagline">Catchment Flood Susceptibility Analytics</span>
+    </div>
+    <nav class="navbar-nav">
+      <a href="/" class="nav-link {% if active_page == 'home' %}active{% endif %}">Home</a>
+      <a href="/dashboard" class="nav-link {% if active_page == 'dashboard' %}active{% endif %}">Dashboard</a>
+      <a href="/history" class="nav-link {% if active_page == 'history' %}active{% endif %}">History</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="dashboard-header">
+      <div>
+        <h1>Flood Risk Analytics Dashboard</h1>
+        <p>Catchment susceptibility distributions, climatological metrics, and assessment history.</p>
+      </div>
+      <div class="btn-action-group">
+        <a href="/" class="btn btn-primary">➕ New Assessment</a>
+        <a href="/history" class="btn btn-secondary">📋 View History</a>
+        {% if stats.total_predictions > 0 %}
+        <a href="/history/export" class="btn btn-secondary">📥 Export CSV</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Mandatory Scientific Limitation Disclaimer -->
+    <div class="disclaimer-banner">
+      <div class="disclaimer-icon">⚠️</div>
+      <div class="disclaimer-content">
+        <strong>Mandatory Scientific Limitation & Advisory Notice:</strong>
+        <p>{{ disclaimer }}</p>
+      </div>
+    </div>
+
+    <!-- Scientific Distinguishment Notice -->
+    <div class="distinction-callout">
+      <strong>⚠️ Scientific Distinguishment Notice:</strong>
+      All metrics, distributions, and charts below represent <em>user-submitted model assessment queries</em> and stored evaluation records. They do <strong>not</strong> represent real-time flood warnings, imminent danger forecasts, or live sensor telemetry from official Central Water Commission (CWC) gauging stations.
+    </div>
+
+    <!-- Summary Metrics Grid -->
+    <div class="metrics-grid">
+      <div class="metric-card primary">
+        <div class="metric-top">
+          <span class="metric-label">Total Predictions</span>
+          <span class="metric-icon">📋</span>
+        </div>
+        <div class="metric-value">{{ stats.total_predictions }}</div>
+        <div class="metric-sub">Recorded in database ({{ stats.total_susceptibility | default(0) }} susceptibility)</div>
+      </div>
+
+      <div class="metric-card danger">
+        <div class="metric-top">
+          <span class="metric-label">High Susceptibility / Risk</span>
+          <span class="metric-icon">🚨</span>
+        </div>
+        <div class="metric-value">{{ stats.high_risk_predictions }}</div>
+        <div class="metric-sub">
+          {% if stats.total_predictions > 0 %}{{ stats.high_risk_percentage }}% of all queries{% else %}0.0% of queries{% endif %}
+        </div>
+      </div>
+
+      <div class="metric-card success">
+        <div class="metric-top">
+          <span class="metric-label">Low Susceptibility / Safe</span>
+          <span class="metric-icon">✅</span>
+        </div>
+        <div class="metric-value">{{ stats.low_risk_predictions }}</div>
+        <div class="metric-sub">
+          {% if stats.total_predictions > 0 %}{{ stats.low_risk_percentage }}% baseline safe conditions{% else %}0.0% of queries{% endif %}
+        </div>
+      </div>
+
+      <div class="metric-card info">
+        <div class="metric-top">
+          <span class="metric-label">Avg. Annual Rainfall</span>
+          <span class="metric-icon">🌧️</span>
+        </div>
+        <div class="metric-value">{{ stats.avg_annual_rainfall }} <small style="font-size: 1rem; font-weight: normal;">mm</small></div>
+        <div class="metric-sub">Across all logged assessment inputs</div>
+      </div>
+    </div>
+
+    {% if stats.total_predictions > 0 %}
+    <!-- Susceptibility Specific Metrics Section -->
+    {% if stats.total_susceptibility and stats.total_susceptibility > 0 %}
+    <div class="card" style="margin-bottom: 1.5rem; padding: 1.2rem 1.5rem;">
+      <h3 style="margin-top: 0; color: var(--deep-blue); font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">
+        <span>🎯</span> Catchment Flood Susceptibility Breakdown (XGBoost Pipeline)
+      </h3>
+      <div class="sub-metrics-grid">
+        <div class="sub-metric-item">
+          <span class="sub-label">Susceptibility Queries:</span>
+          <strong>{{ stats.total_susceptibility }}</strong>
+        </div>
+        <div class="sub-metric-item">
+          <span class="sub-label">High Flood Susceptibility:</span>
+          <strong style="color: var(--alert-red);">{{ stats.high_susceptibility }}</strong>
+        </div>
+        <div class="sub-metric-item">
+          <span class="sub-label">Low Flood Susceptibility:</span>
+          <strong style="color: var(--safe-green);">{{ stats.low_susceptibility }}</strong>
+        </div>
+      </div>
+
+      <!-- Regional & Seasonal Badges -->
+      {% if stats.regional_summary or stats.seasonal_summary %}
+      <div class="breakdown-tags-row">
+        {% if stats.regional_summary %}
+        <div class="breakdown-group">
+          <span class="breakdown-title">By Region:</span>
+          {% for reg, count in stats.regional_summary.items() %}
+          <span class="badge badge-secondary">{{ reg }}: {{ count }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if stats.seasonal_summary %}
+        <div class="breakdown-group">
+          <span class="breakdown-title">By Season:</span>
+          {% for s, count in stats.seasonal_summary.items() %}
+          <span class="badge badge-secondary">{{ s }}: {{ count }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- 4 Charts Grid (2x2 Layout) -->
+    <div class="charts-grid-4">
+      <!-- Chart 1: Doughnut Chart: High vs Low Susceptibility -->
+      <div class="chart-card">
+        <h2><span>📊</span> High vs Low Susceptibility Distribution</h2>
+        <div class="chart-wrapper">
+          <canvas id="riskDonutChart"></canvas>
+        </div>
+        <p class="chart-explanation">
+          Distribution of user-submitted queries classified as <strong>High Flood Susceptibility</strong> (elevated runoff vulnerability) vs. <strong>Low Flood Susceptibility</strong> (standard catchment drainage). This reflects application query activity, not real-world event frequencies.
+        </p>
+      </div>
+
+      <!-- Chart 2: Assessments by Region -->
+      <div class="chart-card">
+        <h2><span>🗺️</span> Assessments by Geographical Region</h2>
+        <div class="chart-wrapper">
+          <canvas id="regionBarChart"></canvas>
+        </div>
+        <p class="chart-explanation">
+          Aggregated assessment volume across Indian macro-geographical zones (Central, East, North, South, West). Shows which regional river basins have been evaluated most frequently by users.
+        </p>
+      </div>
+
+      <!-- Chart 3: Assessments by Season -->
+      <div class="chart-card">
+        <h2><span>🌦️</span> Assessments by Climatological Season</h2>
+        <div class="chart-wrapper">
+          <canvas id="seasonBarChart"></canvas>
+        </div>
+        <p class="chart-explanation">
+          Query volume grouped by season. In Indian hydrology, the <strong>Monsoon</strong> (Jun–Sep) period contributes 70–80% of annual rainfall and drives peak catchment saturation.
+        </p>
+      </div>
+
+      <!-- Chart 4: Timeline / Recent Rainfall & Classification Trend -->
+      <div class="chart-card">
+        <h2><span>📈</span> Recent Predictions vs Rainfall</h2>
+        <div class="chart-wrapper">
+          <canvas id="trendBarChart"></canvas>
+        </div>
+        <p class="chart-explanation">
+          Chronological query sequence plotting annual rainfall (mm) color-coded by susceptibility classification (<span style="color: var(--alert-red); font-weight: 600;">Red = High Susceptibility</span>, <span style="color: var(--safe-green); font-weight: 600;">Green = Low Susceptibility</span>).
+        </p>
+      </div>
+    </div>
+
+    <!-- Recent Activity Table -->
+    <div class="card table-card" style="margin-top: 1.5rem;">
+      <div class="table-card-header">
+        <h2>Recent Assessment History</h2>
+        <a href="/history" class="btn btn-secondary" style="font-size: 0.82rem; padding: 0.35rem 0.75rem;">View All →</a>
+      </div>
+      <div class="table-responsive">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Date & Time</th>
+              <th>Region / Season</th>
+              <th>Annual Rainfall</th>
+              <th>Predicted Susceptibility / Risk</th>
+              <th>Score / Confidence</th>
+              <th>Model</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for pred in stats.recent_predictions %}
+            <tr>
+              <td>#{{ pred.id }}</td>
+              <td>{{ pred.timestamp }}</td>
+              <td>
+                {% if pred.region %}
+                  <strong>{{ pred.region }}</strong> ({{ pred.season }})
+                {% else %}
+                  <span style="color: var(--text-muted);">Legacy All-India</span>
+                {% endif %}
+              </td>
+              <td><strong>{{ pred.annual_rainfall }} mm</strong></td>
+              <td>
+                {% if 'High' in pred.prediction_result %}
+                  <span class="badge badge-danger">🚨 {{ pred.prediction_result }}</span>
+                {% else %}
+                  <span class="badge badge-success">✅ {{ pred.prediction_result }}</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if pred.confidence is not none %}
+                  {{ pred.confidence }}%
+                {% else %}
+                  <span style="color: var(--text-muted);">N/A</span>
+                {% endif %}
+              </td>
+              <td>{{ pred.model_name }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Chart.js Script for Populated Dashboard -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const highRisk = {{ stats.high_risk_predictions | tojson }};
+        const lowRisk = {{ stats.low_risk_predictions | tojson }};
+
+        // 1. Donut Chart: Risk / Susceptibility Distribution
+        const ctxDonut = document.getElementById("riskDonutChart").getContext("2d");
+        new Chart(ctxDonut, {
+          type: "doughnut",
+          data: {
+            labels: ["High Flood Susceptibility", "Low Flood Susceptibility"],
+            datasets: [{
+              data: [highRisk, lowRisk],
+              backgroundColor: ["#d64545", "#2e8b57"],
+              borderColor: ["#ffffff", "#ffffff"],
+              borderWidth: 2,
+              hoverOffset: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: "bottom",
+                labels: {
+                  boxWidth: 14,
+                  font: { family: "'Segoe UI', sans-serif", size: 12, weight: "600" },
+                  padding: 14
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    const total = highRisk + lowRisk;
+                    const value = context.parsed;
+                    const pct = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                    return ` ${context.label}: ${value} (${pct}%)`;
+                  }
+                }
+              }
+            },
+            cutout: "65%"
+          }
+        });
+
+        // 2. Bar Chart: Assessments by Region
+        const regCounts = {{ stats.regional_counts | default({}) | tojson }};
+        const regLabels = Object.keys(regCounts);
+        const regValues = Object.values(regCounts);
+        const ctxRegion = document.getElementById("regionBarChart").getContext("2d");
+        new Chart(ctxRegion, {
+          type: "bar",
+          data: {
+            labels: regLabels,
+            datasets: [{
+              label: "Assessments",
+              data: regValues,
+              backgroundColor: "rgba(29, 126, 166, 0.8)",
+              borderColor: "#1d7ea6",
+              borderWidth: 1.5,
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: function(ctx) { return ` ${ctx.parsed.y} queries`; }
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: { stepSize: 1, precision: 0 },
+                title: { display: true, text: "Number of Queries", color: "#537082", font: { weight: "600" } },
+                grid: { color: "#eef3f7" }
+              },
+              x: { grid: { display: false } }
+            }
+          }
+        });
+
+        // 3. Bar Chart: Assessments by Season
+        const seasonCounts = {{ stats.seasonal_counts | default({}) | tojson }};
+        const seasonLabels = Object.keys(seasonCounts);
+        const seasonValues = Object.values(seasonCounts);
+        const ctxSeason = document.getElementById("seasonBarChart").getContext("2d");
+        new Chart(ctxSeason, {
+          type: "bar",
+          data: {
+            labels: seasonLabels,
+            datasets: [{
+              label: "Assessments",
+              data: seasonValues,
+              backgroundColor: [
+                "rgba(11, 60, 93, 0.85)",
+                "rgba(50, 140, 193, 0.85)",
+                "rgba(226, 168, 59, 0.85)",
+                "rgba(46, 139, 87, 0.85)"
+              ],
+              borderColor: ["#0b3c5d", "#328cc1", "#e2a83b", "#2e8b57"],
+              borderWidth: 1.5,
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: function(ctx) { return ` ${ctx.parsed.y} queries`; }
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: { stepSize: 1, precision: 0 },
+                title: { display: true, text: "Number of Queries", color: "#537082", font: { weight: "600" } },
+                grid: { color: "#eef3f7" }
+              },
+              x: { grid: { display: false } }
+            }
+          }
+        });
+
+        // 4. Trend / History Chart: Recent Rainfall and Predictions
+        const trendData = {{ stats.trend_predictions | tojson }};
+        if (trendData && trendData.length > 0) {
+          const labels = trendData.map(item => `Query #${item.id}`);
+          const rainfallValues = trendData.map(item => item.annual_rainfall);
+          const barColors = trendData.map(item =>
+            item.prediction_result.includes("High") ? "rgba(214, 69, 69, 0.85)" : "rgba(46, 139, 87, 0.85)"
+          );
+          const borderColors = trendData.map(item =>
+            item.prediction_result.includes("High") ? "#d64545" : "#2e8b57"
+          );
+
+          const ctxTrend = document.getElementById("trendBarChart").getContext("2d");
+          new Chart(ctxTrend, {
+            type: "bar",
+            data: {
+              labels: labels,
+              datasets: [{
+                label: "Annual Rainfall (mm)",
+                data: rainfallValues,
+                backgroundColor: barColors,
+                borderColor: borderColors,
+                borderWidth: 1.5,
+                borderRadius: 6
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  callbacks: {
+                    afterLabel: function(context) {
+                      const item = trendData[context.dataIndex];
+                      return `Classification: ${item.prediction_result}\nRecorded: ${item.timestamp}`;
+                    }
+                  }
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: { display: true, text: "Rainfall (mm)", color: "#537082", font: { weight: "600" } },
+                  grid: { color: "#eef3f7" }
+                },
+                x: { grid: { display: false } }
+              }
+            }
+          });
+        }
+      });
+    </script>
+
+    {% else %}
+    <!-- Empty State for User Predictions -->
+    <div class="card empty-state">
+      <div class="empty-icon">📊</div>
+      <h3>No Prediction Data Yet</h3>
+      <p>The dashboard charts and analytics will appear once predictions are run and stored in the database.</p>
+      <a href="/" class="btn btn-primary">Make Your First Prediction</a>
+    </div>
+    {% endif %}
+
+    <!-- =================================================================== -->
+    <!-- MODEL EVALUATION & SCIENTIFIC VALIDATION BENCHMARK SECTION -->
+    <!-- =================================================================== -->
+    <section class="eval-section" style="margin-top: 2.5rem;">
+      <div class="eval-header">
+        <h2>🔬 Model Evaluation & Scientific Benchmark (Stage 4.1 Audit)</h2>
+        <p>
+          Independent multi-regime evaluation of Decision Tree, Random Forest, K-Nearest Neighbors (KNN), and XGBoost
+          calibrated on 7,986 authentic Indian hydrological and meteorological observation records.
+        </p>
+      </div>
+
+      <!-- Regime 1: Stratified 80:20 Split -->
+      <div class="card eval-card" style="margin-bottom: 1.5rem;">
+        <div class="eval-card-header">
+          <div>
+            <h3>1. Stratified 80:20 Validation — Known Catchments (Memorization & Interpolation)</h3>
+            <span class="eval-badge badge-info">Random Split Evaluation</span>
+          </div>
+          <span class="sample-count">Train: 6,388 | Test: 1,598 (50.0% Floods)</span>
+        </div>
+        <p class="eval-note">
+          Simulates operational performance on known monitoring stations where historical climatological normals are available.
+        </p>
+        <div class="table-responsive">
+          <table class="history-table eval-table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Scope</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1-Score</th>
+                <th>ROC-AUC</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in evaluation_metrics.stratified %}
+              <tr {% if row.is_best %}style="background: #f0f7fb; font-weight: 600;"{% endif %}>
+                <td>
+                  <strong>{{ row.model }}</strong>
+                  {% if row.is_best %}<span class="badge badge-primary" style="margin-left: 0.4rem;">Selected</span>{% endif %}
+                </td>
+                <td>{{ row.scope }}</td>
+                <td><strong>{{ row.accuracy }}</strong></td>
+                <td>{{ row.precision }}</td>
+                <td>{{ row.recall }}</td>
+                <td>{{ row.f1 }}</td>
+                <td>{{ row.roc_auc }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Regime 2: Station-Grouped 5-Fold Cross-Validation -->
+      <div class="card eval-card" style="margin-bottom: 1.5rem;">
+        <div class="eval-card-header">
+          <div>
+            <h3>2. Station-Grouped 5-Fold Cross-Validation — Unseen Catchments (Spatial Generalization)</h3>
+            <span class="eval-badge badge-warning">GroupKFold (Zero Station Overlap)</span>
+          </div>
+          <span class="sample-count">180 Gauging Stations across 5 Folds</span>
+        </div>
+        <p class="eval-note">
+          Evaluates pure spatial generalization to ungauged river basins where no training samples from the target basin exist.
+        </p>
+        <div class="table-responsive">
+          <table class="history-table eval-table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Scope</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1-Score</th>
+                <th>ROC-AUC</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in evaluation_metrics.station_grouped %}
+              <tr {% if row.is_best %}style="background: #fdf8ed; font-weight: 600;"{% endif %}>
+                <td><strong>{{ row.model }}</strong></td>
+                <td>{{ row.scope }}</td>
+                <td><strong>{{ row.accuracy }}</strong></td>
+                <td>{{ row.precision }}</td>
+                <td>{{ row.recall }}</td>
+                <td>{{ row.f1 }}</td>
+                <td>{{ row.roc_auc }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Regime 3: Chronological Split -->
+      <div class="card eval-card" style="margin-bottom: 1.5rem;">
+        <div class="eval-card-header">
+          <div>
+            <h3>3. Chronological Validation (&lt;2012 vs. &ge;2012) — Temporal Distribution Shift</h3>
+            <span class="eval-badge badge-danger">Temporal Backtest</span>
+          </div>
+          <span class="sample-count">Train (&lt;2012): 5,117 (67.2% Floods) | Test (2012–2020): 2,869 (19.4% Floods)</span>
+        </div>
+        <p class="eval-note">
+          Evaluates models across decades, revealing the class prior shift between historical inventory archives and modern digital telemetry.
+        </p>
+        <div class="table-responsive">
+          <table class="history-table eval-table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Scope</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1-Score</th>
+                <th>ROC-AUC</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in evaluation_metrics.chronological %}
+              <tr {% if row.is_best %}style="background: #fdf3e3; font-weight: 600;"{% endif %}>
+                <td><strong>{{ row.model }}</strong></td>
+                <td>{{ row.scope }}</td>
+                <td><strong>{{ row.accuracy }}</strong></td>
+                <td>{{ row.precision }}</td>
+                <td>{{ row.recall }}</td>
+                <td>{{ row.f1 }}</td>
+                <td>{{ row.roc_auc }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Regime 4: Real-World Continuous Stream -->
+      <div class="card eval-card" style="margin-bottom: 1.5rem;">
+        <div class="eval-card-header">
+          <div>
+            <h3>4. Real-World Continuous Stream — Natural Base Rate Test</h3>
+            <span class="eval-badge badge-info">Operational Diagnostic</span>
+          </div>
+          <span class="sample-count">N = 25,000 Random Telemetry Stream Sample (1.86% Natural Flood Prevalence)</span>
+        </div>
+        <p class="eval-note">
+          Demonstrates the effect of natural non-flood imbalance (98.1% dry/normal days) without real-time rain gauge telemetry.
+        </p>
+        <div class="table-responsive">
+          <table class="history-table eval-table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Scope</th>
+                <th>Accuracy</th>
+                <th>Precision</th>
+                <th>Recall</th>
+                <th>F1-Score</th>
+                <th>ROC-AUC</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in evaluation_metrics.natural_stream %}
+              <tr {% if row.is_best %}style="background: #eef5fa; font-weight: 600;"{% endif %}>
+                <td><strong>{{ row.model }}</strong></td>
+                <td>{{ row.scope }}</td>
+                <td><strong>{{ row.accuracy }}</strong></td>
+                <td>{{ row.precision }}</td>
+                <td>{{ row.recall }}</td>
+                <td>{{ row.f1 }}</td>
+                <td>{{ row.roc_auc }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 4 Scientific Insight Cards -->
+      <div class="insights-grid">
+        <div class="insight-card">
+          <div class="insight-icon">🔍</div>
+          <h4>Why Random Split Overestimates Generalization</h4>
+          <p>
+            In an 80:20 stratified split, <strong>85.9% of test feature combinations</strong> and <strong>100% of monitoring stations</strong> were already present in the training set. Because climatological normals are static per basin, the model memorizes known catchment identities rather than discovering dynamic rainfall-runoff mechanics.
+          </p>
+        </div>
+
+        <div class="insight-card">
+          <div class="insight-icon">🌐</div>
+          <h4>Why Spatial & Temporal Splits are More Demanding</h4>
+          <p>
+            When evaluated on completely unseen river basins (Station-Grouped CV), accuracy drops to <strong>60.25%</strong> (ROC-AUC: 0.7842). In chronological testing, models trained on flood-heavy pre-2012 inventories over-predict floods on modern digital archives (where 80.6% of days are normal), dropping precision to 25.12%.
+          </p>
+        </div>
+
+        <div class="insight-card">
+          <div class="insight-icon">⚖️</div>
+          <h4>The Base Rate Fallacy in Operational Floods</h4>
+          <p>
+            Natural floods occur on only <strong>1.91% of days</strong> across all monitoring stations. Even with 86% specificity, the 14% false-positive rate on the 98.1% normal days vastly outnumbers true flood occurrences, lowering precision to <strong>3.58%</strong> without live radar and rainfall telemetry.
+          </p>
+        </div>
+
+        <div class="insight-card">
+          <div class="insight-icon">🎯</div>
+          <h4>Susceptibility Demonstrator vs. Operational Warning</h4>
+          <p>
+            This system is an <strong>educational catchment susceptibility demonstrator</strong>. It identifies baseline topographical and climatological vulnerability under seasonal rainfall regimes. Dynamic flood warning requires live 24–48h NWP rainfall forecasts, radar feeds, and river-gauge telemetry from official agencies.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Rising Waters — Machine Learning Based Flood Susceptibility Assessment System</p>
+  </footer>
+</body>
+</html>
