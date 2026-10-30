@@ -2,12 +2,18 @@
 ### A Machine Learning-Based Catchment Flood Susceptibility Assessment System
 
 [![Python](https://img.shields.io/badge/Python-3.10%20%7C%203.11-blue.svg)](https://www.python.org/)
-[![Flask](https://img.shields.io/badge/Framework-Flask%203.1-green.svg)](https://flask.palletsprojects.com/)
-[![Scikit-Learn](https://img.shields.io/badge/ML-Scikit--Learn%201.6-orange.svg)](https://scikit-learn.org/)
+[![Flask](https://img.shields.io/badge/Framework-Flask%203.0-green.svg)](https://flask.palletsprojects.com/)
+[![Scikit-Learn](https://img.shields.io/badge/ML-Scikit--Learn%201.5-orange.svg)](https://scikit-learn.org/)
 [![XGBoost](https://img.shields.io/badge/Model-XGBoost%202.1-red.svg)](https://xgboost.readthedocs.io/)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Render-46E3B7?logo=render&logoColor=white)](https://rising-waters-5r3a.onrender.com)
 [![Tests](https://img.shields.io/badge/Tests-28%20Passing%20(100%25)-brightgreen.svg)]()
 [![Status](https://img.shields.io/badge/Status-Verified%20Academic%20Submission-success.svg)]()
 [![License](https://img.shields.io/badge/License-MIT%20%2F%20Academic-lightgrey.svg)]()
+
+---
+
+> 🌐 **Live Deployed Application:** **[https://rising-waters-5r3a.onrender.com](https://rising-waters-5r3a.onrender.com)**  
+> *Access the fully functional Catchment Flood Susceptibility Assessment platform online on Render.*
 
 ---
 
@@ -60,7 +66,8 @@ python app.py
 ```
 
 Open your browser and navigate to:
-👉 **[http://127.0.0.1:5000](http://127.0.0.1:5000)**
+👉 **Local:** [http://127.0.0.1:5000](http://127.0.0.1:5000)  
+👉 **Live Deployment:** [https://rising-waters-5r3a.onrender.com](https://rising-waters-5r3a.onrender.com)
 
 ---
 
